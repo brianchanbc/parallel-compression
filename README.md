@@ -1,8 +1,8 @@
 # Parallel File Compression
 
-![File Compression Flow](./parcompress/benchmark/fileCompressionFlow.png)
+![File Compression Flow](./benchmark/fileCompressionFlow.png)
 
-**Before running the program, download [Data](https://drive.google.com/drive/u/1/folders/1Pnki8B-Bd8vNHDUj26IoYeAGbYkQ8xY5) directory and put the folder under parcompress's data directory accordingly as the file sizes are large and best to be downloaded separately.**
+**Before running the program, download [Data](https://drive.google.com/drive/u/1/folders/1Pnki8B-Bd8vNHDUj26IoYeAGbYkQ8xY5) directory and put the folder under data directory accordingly as the file sizes are large and best to be downloaded separately.**
 
 ## Project Summary
 File compression and decompression are nothing new. One can sequentially compress a file with ease, but what about a mega-size file? File compression process is dull and different parts of the file does not depend on each other, at least in the sense of their binary representation, not logically speaking. This gives a good opportunity for parallelism. In this project, I will tackle the file compression and decompression process, attempt to using multiple threads to parallelize it with bulk synchronous parallel (BSP) approach, combined with using Go channels to feed pipeline of tasks among different threads, and integrate work stealing deque algorithm to test the limits of parallelization. 
@@ -58,9 +58,9 @@ What is the best scenario for using the workstealing DEQueue? The best scenario 
 As mentioned above, the hotspots are the encoding and decoding process, which are CPU-bound and can be parallelized. The bottleneck is the IO-bound tasks, which are reading and writing to files.
 
 # Result Interpretation
-Detailed time measurements are stored in *parcompress/benchmark/slurm/out/measurements.txt* 
+Detailed time measurements are stored in *benchmark/slurm/out/measurements.txt* 
 
-Speedup graph is stored in *parcompress/benchmark/speedup.png*. 
+Speedup graph is stored in *benchmark/speedup.png*. 
 
 Cluster node specs: 
 * fast node
@@ -70,7 +70,7 @@ Cluster node specs:
 * /local: 2x 960GB Intel SSD RAID0 
 
 ## Speedup Graph
-![Speedup Graph](./parcompress/benchmark/speedup.png)
+![Speedup Graph](./benchmark/speedup.png)
 
 P = Parallel without worksteal, PWS = Parallel with worksteal
 
@@ -95,7 +95,7 @@ Interestingly there is superlinear speedup with few number of threads. This is p
 Generally speaking, the compression ratios are largely consistent among small to large files. There are better compression algorithms out there that can achieve higher compression ratios, but the goal of this project is to demonstrate how the parallelization of the file compression and decompression can speed up the process rather than a striving for a better compression ratio.
 
 ## How to run the scripts
-1. In *parcompress* directory, run the following to set up Python virtual environment
+1. In *root* directory, run the following to set up Python virtual environment
 ```terminal
 python -m venv env
 ```
@@ -103,7 +103,7 @@ python -m venv env
 ```terminal
 source env/bin/activate
 ```
-3. In *parcompress* directory, run the following to install the Python libraries for generating graph. 
+3. In *root* directory, run the following to install the Python libraries for generating graph. 
 ```terminal
 pip install -r requirements.txt
 ```
@@ -143,7 +143,7 @@ deactivate
 * *fileCompressionFlow.png* is the flowchart of the file compression and decompression process.
 
 **data** directory: 
-**Note the file sizes are huge so it is excluded from the repository, download [Data](https://drive.google.com/drive/u/1/folders/1Pnki8B-Bd8vNHDUj26IoYeAGbYkQ8xY5) directory and put the folder under parcompress directory**
+**Note the file sizes are huge so it is excluded from the repository, download [Data](https://drive.google.com/drive/u/1/folders/1Pnki8B-Bd8vNHDUj26IoYeAGbYkQ8xY5) directory and put the folder under root directory**
 * *large* directory stores the large input file *data_large.txt*, compressed file *data_large.gob* and decompressed output file *data_large_out.txt*.
 * *medium* directory stores the medium input file *data_medium.txt*, compressed file *data_medium.gob* and decompressed output file *data_medium_out.txt*.
 * *small* directory stores the small input file *data_small.txt*, compressed file *data_small.gob* and decompressed output file *data_small_out.txt*.
